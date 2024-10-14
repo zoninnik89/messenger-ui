@@ -1,5 +1,8 @@
 .chat-list-container {
     padding: 10px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
   }
   
   .chat-item {
@@ -10,4 +13,42 @@
   
   .chat-item:hover {
     background-color: #f0f0f0;
+  }
+  
+  /* Styling the container for the input and button */
+  .add-chat-container {
+    display: flex;
+    margin-top: auto; /* Pushes the input to the bottom of the list */
+    padding: 10px 0;
+    border-top: 1px solid #ddd;
+  }
+  
+  /* Styling the input field for new chats */
+  .add-chat-input {
+    flex: 1;
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  /* Styling the Add Chat button */
+  .add-chat-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .add-chat-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .add-chat-button:active {
+    background-color: #004494;
   }

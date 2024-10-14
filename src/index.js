@@ -1,11 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './components/styles.css';
 import App from './App';
+import { Provider } from 'mobx-react-lite';
+import chatStore from './store/store';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
+ReactDOM.render(
+  <Provider chatStore={chatStore}>
     <App />
-  </React.StrictMode>
+  </Provider>,
+  document.getElementById('root')
 );
