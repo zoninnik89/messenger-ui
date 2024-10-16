@@ -1,7 +1,7 @@
 import React from 'react';
 import ChatList from './chat_list/ChatList';
 import ChatWindow from './chat_window/ChatWindow';
-import { useStore } from '../../store/useStore';
+import { useStore } from '../../../store/useStore';
 import './ChatPage.css'; 
 
 const ChatPage = () => {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './ChatList.css';
 import { observer } from 'mobx-react-lite';
-import { useStore } from '../../../store/useStore';
+import { useStore } from '../../../../store/useStore';
 
 const ChatList = observer(() => {
   const { chatStore } = useStore();

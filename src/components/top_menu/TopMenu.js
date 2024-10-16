@@ -1,8 +1,15 @@
 import React from 'react';
 import './TopMenu.css'; 
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const TopMenu = () => {
+  const location = useLocation(); 
+  const navigate = useNavigate();
+
+  const handleLoginClick = () => {
+    navigate('/login', { state: { from: location.pathname } }); // Pass current location
+  };
+
   return (
     <div className="fixed-menu">
       <div className="logo">
@@ -10,7 +17,7 @@ const TopMenu = () => {
       </div>
       <div className="menu-items">
         <Link to="/">Chat</Link>
-        <Link to="/login">Login</Link>
+        <Link to="/login" state={{ from: location.pathname }}>Login</Link>
       </div>
     </div>
   );
