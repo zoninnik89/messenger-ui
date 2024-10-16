@@ -4,14 +4,17 @@ import LoginModal from './LoginModal';
 
 const LoginModalWrapper = () => {
   const location = useLocation();
-  const navigate = useNavigate();
+
+  console.log('Location in ModalWrapper:', location);
 
   const from = location.state?.from || '/'; // Get the previous location
   const isLoginRoute = location.pathname === '/login';  
 
+  console.log('Location in ModalWrapper:', from);
+
   return (
     <>
-      {isLoginRoute && <LoginModal from={from} nav={navigate} />}
+      {<LoginModal open={isLoginRoute} from={from} />}
     </>
   );
 };

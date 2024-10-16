@@ -4,11 +4,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const TopMenu = () => {
   const location = useLocation(); 
-  const navigate = useNavigate();
-
-  const handleLoginClick = () => {
-    navigate('/login', { state: { from: location.pathname } }); // Pass current location
-  };
 
   return (
     <div className="fixed-menu">

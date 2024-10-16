@@ -5,28 +5,22 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const AuthPopup = ({ from, navigate }) => {
-  const [open, setOpen] = useState(false);
-  const location = useLocation();
-
-  // Automatically open the popup when on the /login route
-  useEffect(() => {
-    if (location.pathname === '/login') {
-      setOpen(true);
-    }
-  }, [location.pathname]);
+const AuthPopup = ({ open, from }) => {
+  const [isOpened, setOpen] = useState(open);
+  const navigate = useNavigate();
 
   // Handle closing of the popup and navigate back to home page
   const handleClose = () => {
     setOpen(false);
+    console.log('Navigating back to:', from); // Debugging
     navigate(from)
   };
 
   return (
     <div>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={isOpened} onClose={handleClose}>
         <DialogTitle>Login</DialogTitle>
         <DialogContent>
           <TextField
