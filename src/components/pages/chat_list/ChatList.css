@@ -1,28 +1,16 @@
 .chat-list-container {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Ensure the container takes the full height of the browser window */
-}
-
-.chat-items {
-  flex: 1; /* Fill the available space above the Add Chat area */
-  overflow-y: auto; /* Enable scrolling for chat items */
-}
-
-.chat-item {
-  padding: 15px;
-  border-bottom: 1px solid #ddd;
-  cursor: pointer;
-}
-
-.chat-item:hover {
-  background-color: #f0f0f0;
+  padding: 0.5em 1em;
+  height: 100%; /* Ensure the container takes the full height of the browser window */
+  overflow-y: auto;
 }
 
 /* Styling the container for the input and button */
 .add-chat-container {
   display: flex;
-  padding: 10px;
+  padding-top: 1em;
+  padding-bottom: 0.5em;
   border-top: 1px solid #ddd;
   background-color: #fff;
 }
@@ -56,3 +44,19 @@
 .add-chat-button:active {
   background-color: #004494;
 }
+
+.chat-items {
+  flex: 1; /* Fill the available space above the Add Chat area */
+  overflow-y: auto; /* Enable scrolling for chat items */
+}
+
+.chat-item {
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.chat-item:hover {
+  background-color: #f0f0f0;
+}
+

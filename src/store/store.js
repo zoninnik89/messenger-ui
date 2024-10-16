@@ -17,6 +17,7 @@ class ChatStore {
 
   selectChat(chat) {
     this.selectedChat = chat;
+    console.log(this.selectedChat)
   }
 }
 

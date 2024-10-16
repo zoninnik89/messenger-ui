@@ -2,28 +2,25 @@
 import './App.css'; 
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { useStore } from './store/useStore';
-import ChatList from './components/chat_list/ChatList';
-import ChatWindow from './components/chat_window/ChatWindow';
-
+import ChatPage from './components/pages/ChatPage';
+import TopMenu from './components/top_menu/TopMenu';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 const App = observer(() => {
-    const { chatStore } = useStore(); // Access the store
   
     return (
-      <div className="app">
-        <div className="chat-list">
-          <ChatList />
+      <Router>
+        <div className="app">
+          <TopMenu /> {/* MenuBar will always stay at the top */}
+          <div className="content">
+            <Routes>
+              <Route path="/" element={<ChatPage />} />
+            </Routes>
+          </div>
         </div>
-        <div className="chat-window">
-          {chatStore.selectedChat ? (
-            <ChatWindow chat={chatStore.selectedChat} />
-          ) : (
-            <div className="no-chat-selected">Select a chat to start messaging</div>
-          )}
-        </div>
-      </div>
+      </Router>
     );
+
   });
 
 export default App;
