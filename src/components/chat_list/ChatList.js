@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './ChatList.css';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../store/useStore';
@@ -17,16 +17,6 @@ const ChatList = observer(() => {
     <div className="chat-list-container">
       <h2>Chats</h2>
 
-      {chatStore.chats.map((chat, index) => (
-        <div
-          key={index}
-          className="chat-item"
-          onClick={() => chatStore.selectChat(chat)}
-        >
-          {chat.name}
-        </div>
-      ))}
-
       <div className="add-chat-container">
         <input
           type="text"
@@ -39,6 +29,17 @@ const ChatList = observer(() => {
           Add Chat
         </button>
       </div>
+
+      {chatStore.chats.map((chat, index) => (
+        <div
+          key={index}
+          className="chat-item"
+          onClick={() => chatStore.selectChat(chat)}
+        >
+          {chat.name}
+        </div>
+      ))}
+
     </div>
   );
 });

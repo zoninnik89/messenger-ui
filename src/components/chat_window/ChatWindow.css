@@ -1,7 +1,8 @@
 .chat-window-container {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 100vh;
+    overflow: hidden;
   }
   
   .messages {
@@ -23,6 +24,8 @@
     display: flex;
     padding: 10px;
     border-top: 1px solid #ddd;
+    background-color: white;
+    flex-shrink: 0;
   }
   
   .message-input input {

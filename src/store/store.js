@@ -1,7 +1,10 @@
 import { makeAutoObservable } from 'mobx';
 
 class ChatStore {
-  chats = [];
+  chats = [
+    { id: 1, name: 'Alice', messages: ['Hi!', 'How are you?'] },
+    { id: 2, name: 'Bob', messages: ['Hey!', 'What’s up?'] },
+  ];
   selectedChat = null;
 
   constructor() {
