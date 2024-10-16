@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import { MobXProviderContext } from 'mobx-react-lite';
+import { StoreContext } from './storeContext';
 
 export function useStore() {
-  return useContext(MobXProviderContext);
+  return useContext(StoreContext);
 }

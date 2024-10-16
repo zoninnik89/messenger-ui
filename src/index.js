@@ -1,12 +1,12 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import App from './App';
-import { Provider } from 'mobx-react-lite';
-import chatStore from './store/store';
+import { StoreProvider } from './store/storeContext';
 
-ReactDOM.render(
-  <Provider chatStore={chatStore}>
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+root.render(
+  <StoreProvider>
     <App />
-  </Provider>,
-  document.getElementById('root')
+  </StoreProvider>,
 );
