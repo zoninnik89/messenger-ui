@@ -6,6 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { useNavigate } from 'react-router-dom';
+import { useStore } from '../../../store/useStore';
 
 const AuthPopup = ({ open, from }) => {
   const [isOpened, setOpen] = useState(open);
@@ -14,6 +15,7 @@ const AuthPopup = ({ open, from }) => {
   const [confirmPassword, setConfirmPassword] = useState(''); // For registration
   const [errors, setErrors] = useState({ email: '', password: '', confirmPassword: '' });
   const [isLogin, setIsLogin] = useState(true); // Toggle between Login and Register
+  const { userStore } = useStore();
   const navigate = useNavigate();
 
   const loginUrl = 'http://localhost:8080/login'
@@ -73,6 +75,9 @@ const AuthPopup = ({ open, from }) => {
 
             if (response.ok) {
                 const data = await response.json();
+                if (isLogin) {
+                    userStore.saveUserData(data)
+                }
                 console.log(isLogin ? 'Login successful:' : 'Registration successful:', data);
                 // Store the token in user store
             } else {

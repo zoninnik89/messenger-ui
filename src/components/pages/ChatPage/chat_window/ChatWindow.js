@@ -6,8 +6,9 @@ import { observer } from 'mobx-react-lite';
 import { useStore } from '../../../../store/useStore';
 
 const ChatWindow = observer(() => {
-  const { chatStore } = useStore(); // Store for current user and chat messages
+  const { chatStore, userStore } = useStore(); // Store for current user and chat messages
   const [newMessage, setNewMessage] = useState('');
+  const currentUserID = userStore.getUserID()
 
   const sendMessage = () => {
     if (newMessage.trim() === '') return;
@@ -15,7 +16,7 @@ const ChatWindow = observer(() => {
     // Sending the message through the store
     chatStore.sendMessage({
       text: newMessage,
-      sender: chatStore.currentUser.id,
+      sender: currentUserID,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), // time of sending
     });
     setNewMessage('');
@@ -37,7 +38,7 @@ const ChatWindow = observer(() => {
           <Box
             key={index}
             display="flex"
-            flexDirection={msg.sender.id === chatStore.currentUser.id ? 'row-reverse' : 'row'}
+            flexDirection={msg.sender.id === currentUserID ? 'row-reverse' : 'row'}
             alignItems="flex-end"
             mb={2}
           >
@@ -46,9 +47,9 @@ const ChatWindow = observer(() => {
 
             {/* Message content */}
             <Box
-              ml={msg.sender.id === chatStore.currentUser.id ? 0 : 2}
-              mr={msg.sender.id === chatStore.currentUser.id ? 2 : 0}
-              bgcolor={msg.sender.id === chatStore.currentUser.id ? '#dcf8c6' : '#e0e0e0'}
+              ml={msg.sender.id === currentUserID ? 0 : 2}
+              mr={msg.sender.id === currentUserID ? 2 : 0}
+              bgcolor={msg.sender.id === currentUserID ? '#dcf8c6' : '#e0e0e0'}
               p={2}
               borderRadius={2}
               maxWidth="60%"
