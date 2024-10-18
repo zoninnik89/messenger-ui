@@ -18,8 +18,8 @@ const AuthPopup = ({ open, from }) => {
   const { userStore } = useStore();
   const navigate = useNavigate();
 
-  const loginUrl = 'http://localhost:8080/login'
-  const registerUrl = 'http://localhost:8080/register'
+  const loginUrl = 'http://127.0.0.1:3002/login'
+  const registerUrl = 'http://127.0.0.1:3002/register'
 
   // Handle closing of the popup and navigate back to home page
   const handleClose = () => {
@@ -70,7 +70,7 @@ const AuthPopup = ({ open, from }) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ login: email, password: password }),
             });
 
             if (response.ok) {
