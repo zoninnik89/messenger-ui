@@ -23,16 +23,20 @@ class UserStore {
   }
 
   getUserID() {
-    if (this.currentUser.id !== '') {
-      return this.currentUser.uid;
-    }
+    return this.currentUser.id;
   }
 
   removeUserData() {
     this.currentUser['token'] = '';
     this.currentUser['id'] = '';
     this.currentUser['login'] = '';
+    this.websocketService = null;
   }
+
+  setWebSocketService(service) {
+    this.websocketService = service;
+  }
+
 
 }
 

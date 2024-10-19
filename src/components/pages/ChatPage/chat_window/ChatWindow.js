@@ -4,6 +4,7 @@ import { Box, Avatar, TextField, IconButton, Typography } from '@mui/material';
 import './ChatWindow.css';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../../../store/useStore';
+import WebSocketService from '../../../websocketservice/WebSocketService';
 
 const ChatWindow = observer(() => {
   const { chatStore, userStore } = useStore(); // Store for current user and chat messages
@@ -12,15 +13,23 @@ const ChatWindow = observer(() => {
 
   const sendMessage = () => {
     if (newMessage.trim() === '') return;
+    console.log('attempting to send the message: ', newMessage)
 
-    // Sending the message through the store
-    chatStore.sendMessage({
-      text: newMessage,
-      sender: currentUserID,
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), // time of sending
-    });
+    const websocketService = WebSocketService.instance;
+    if (websocketService) {
+    websocketService.sendMessage(
+      JSON.stringify(
+        {
+          chat_id: String(chatStore.selectedChat.id),
+          message_text: newMessage,
+        }
+      )
+    );
     setNewMessage('');
-  };
+  } else {
+    console.error('WebSocketService is not available')
+  }
+  }
 
   if (!chatStore.selectedChat) {
     return (
