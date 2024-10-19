@@ -8,8 +8,7 @@ import TextField from '@mui/material/TextField';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../../../store/useStore';
 
-const AuthPopup = ({ open, from }) => {
-  const [isOpened, setOpen] = useState(open);
+const LoginModal = ({ open, onClose }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState(''); // For registration
@@ -31,11 +30,10 @@ const AuthPopup = ({ open, from }) => {
     setConfirmPassword('');
   }
 
-  // Handle closing of the popup and navigate back to home page
+  // Handle closing of the popup and cleaning all fields
   const handleClose = () => {
     clearForm();
-    setOpen(false);
-    navigate(from);
+    onClose();
   };
 
   const validateEmail = (email) => {
@@ -88,7 +86,7 @@ const AuthPopup = ({ open, from }) => {
 
             if (response.ok) {
                 if (isLogin) {
-                  userStore.saveUserData(data);
+                  userStore.saveUserData(data["auth_token"]);
                   console.log('Login successful:', data);
                   handleClose();
                 } else {
@@ -121,7 +119,7 @@ const AuthPopup = ({ open, from }) => {
 
   return (
 
-    <Dialog open={isOpened} onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose}>
       <DialogTitle>{isLogin ? 'Login' : 'Register'}</DialogTitle>
       <DialogContent>
         {registrationSuccess ? (
@@ -205,4 +203,4 @@ const AuthPopup = ({ open, from }) => {
   );
 };
 
-export default AuthPopup;
+export default LoginModal;

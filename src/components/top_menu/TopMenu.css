@@ -31,3 +31,19 @@
   .fixed-menu .menu-items a:hover {
     text-decoration: underline;
   }
+
+  .menu-items .MuiButton-root {
+    color: white; /* Text color */
+    background-color: transparent; /* Background color */
+    border: 1px solid white; /* Optional border to make it more visible */
+    text-transform: none; /* Keep text capitalization */
+    padding: 6px 12px; /* Adjust padding */
+    font-size: 1rem; /* Font size */
+    margin-left: 10px; /* Spacing between buttons */
+  }
+  
+  /* Hover effect for buttons */
+  .menu-items .MuiButton-root:hover {
+    background-color: white; /* Background color on hover */
+    color: #007bff; /* Text color on hover */
+  }

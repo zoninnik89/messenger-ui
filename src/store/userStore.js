@@ -24,6 +24,12 @@ class UserStore {
     }
   }
 
+  removeUserData() {
+    this.currentUser['token'] = ''
+    this.currentUser['id'] = ''
+    this.currentUser['login'] = ''
+  }
+
 }
 
 const parseToken = (token) => {
