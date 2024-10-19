@@ -1,4 +1,6 @@
+
 import { makeAutoObservable } from 'mobx';
+import websocketService from '../services';
 
 class UserStore {
   currentUser = {
@@ -7,15 +9,17 @@ class UserStore {
     'login': '',
   };
 
+  websocketService = null;
+
   constructor() {
     makeAutoObservable(this);
   }
 
   saveUserData(token) {
     const tokenPayload = parseToken(token);
-    this.currentUser['token'] = token
-    this.currentUser['id'] = tokenPayload['uid']
-    this.currentUser['login'] = tokenPayload['login']
+    this.currentUser['token'] = token;
+    this.currentUser['id'] = tokenPayload['uid'];
+    this.currentUser['login'] = tokenPayload['login'];
   }
 
   getUserID() {
@@ -25,9 +29,9 @@ class UserStore {
   }
 
   removeUserData() {
-    this.currentUser['token'] = ''
-    this.currentUser['id'] = ''
-    this.currentUser['login'] = ''
+    this.currentUser['token'] = '';
+    this.currentUser['id'] = '';
+    this.currentUser['login'] = '';
   }
 
 }

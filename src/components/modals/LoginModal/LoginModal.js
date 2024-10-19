@@ -19,7 +19,6 @@ const LoginModal = ({ open, onClose }) => {
   const [backendErrorMessage, setBackendErrorMessage] = useState(''); // To track backend error messages
 
   const { userStore } = useStore();
-  const navigate = useNavigate();
 
   const loginUrl = 'http://127.0.0.1:3002/login'
   const registerUrl = 'http://127.0.0.1:3002/register'
@@ -80,6 +79,7 @@ const LoginModal = ({ open, onClose }) => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ login: email, password: password }),
+                credentials: 'include',
             });
 
             const data = await response.json();

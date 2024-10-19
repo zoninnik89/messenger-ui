@@ -13,10 +13,8 @@ class WebSocketService {
         console.error('User should be logged in for WebSocket connection');
         return;
       }
-  
-      const token = this.userStore.currentUser.token; 
 
-      this.ws = new WebSocket(`ws://localhost:3002/ws`);
+      this.ws = new WebSocket(`ws://localhost:3002/ws?token=${userToken}`);
 
       this.ws.onopen = () => {
         console.log('WebSocket connection established');
@@ -60,4 +58,5 @@ class WebSocketService {
     }
   }
   
+
   export default WebSocketService;
