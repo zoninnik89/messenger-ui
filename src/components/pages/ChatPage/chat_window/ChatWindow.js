@@ -20,7 +20,7 @@ const ChatWindow = observer(() => {
     websocketService.sendMessage(
       JSON.stringify(
         {
-          chat_id: String(chatStore.selectedChat.id),
+          chat_id: String(chatStore.selectedChatID),
           message_text: newMessage,
         }
       )
@@ -31,7 +31,7 @@ const ChatWindow = observer(() => {
   }
   }
 
-  if (!chatStore.selectedChat) {
+  if (!chatStore.selectedChatID) {
     return (
       <Box className="no-chat-selected" textAlign="center" m="auto">
         Select a chat to start messaging
@@ -43,29 +43,29 @@ const ChatWindow = observer(() => {
     <Box className="chat-window-container" display="flex" flexDirection="column" height="100%">
       {/* Messages section */}
       <Box className="messages" flex="1" p={2} overflow="auto">
-        {chatStore.selectedChat.messages.map((msg, index) => (
+        {chatStore.chats[chatStore.selectedChatID].messages.map((msg, index) => (
           <Box
             key={index}
             display="flex"
-            flexDirection={msg.sender.id === currentUserID ? 'row-reverse' : 'row'}
+            flexDirection={msg.sender_id === currentUserID ? 'row-reverse' : 'row'}
             alignItems="flex-end"
             mb={2}
           >
-            {/* Avatar */}
-            <Avatar src={msg.sender.avatar} alt="Avatar" />
+            {/* Avatar
+            <Avatar src={msg.sender.avatar} alt="Avatar" /> */}
 
             {/* Message content */}
             <Box
-              ml={msg.sender.id === currentUserID ? 0 : 2}
-              mr={msg.sender.id === currentUserID ? 2 : 0}
-              bgcolor={msg.sender.id === currentUserID ? '#dcf8c6' : '#e0e0e0'}
+              ml={msg.sender_id === currentUserID ? 0 : 2}
+              mr={msg.sender_id === currentUserID ? 2 : 0}
+              bgcolor={msg.sender_id === currentUserID ? '#dcf8c6' : '#e0e0e0'}
               p={2}
               borderRadius={2}
               maxWidth="60%"
             >
-              <Typography variant="body1">{msg.text}</Typography>
+              <Typography variant="body1">{msg.message_text}</Typography>
               <Typography variant="caption" color="textSecondary" textAlign="right">
-                {msg.time}
+                {msg.sent_ts}
               </Typography>
             </Box>
           </Box>

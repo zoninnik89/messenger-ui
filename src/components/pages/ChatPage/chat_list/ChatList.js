@@ -34,7 +34,7 @@ const ChatList = observer(() => {
         <div
           key={index}
           className="chat-item"
-          onClick={() => chatStore.selectChat(chat)}
+          onClick={() => chatStore.selectChat(chat.id)}
         >
           {chat.name}
         </div>

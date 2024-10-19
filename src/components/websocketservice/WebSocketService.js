@@ -36,7 +36,11 @@ class WebSocketService {
         this.ws.onmessage = (event) => {
             console.log('Message from server:', event.data);
             const message = JSON.parse(event.data);
-            this.handleIncomingMessage(message);
+            if (message.type) {
+              console.log('ping from backend received')
+            } else {
+              this.handleIncomingMessage(message);
+            }
         };
     
         this.ws.onclose = () => {
@@ -50,10 +54,17 @@ class WebSocketService {
     }
   
     handleIncomingMessage(message) {
-      const chat = this.chatStore.chats.find((c) => c.id === message.chat_id);
-      if (chat) {
-        chat.messages.push(message);
-      }
+        console.log('Keys in the message object:', Object.keys(message))
+        console.log(`Type of message.chat_id: ${typeof message.chat_id}`); // Check the type
+        console.log(`Value of message.chat_id: ${message.chat_id}`); // Check the actual value
+        
+        for (const chat of this.chatStore.chats) {
+          if (chat.id == message.chat_id) {
+            console.log('message was added to chat messages')
+            console.log(this.chatStore.chats[message.chat_id].messages)
+            return this.chatStore.addMessageToChat(message.chat_id, message)
+          }
+        }
     }
   
     sendMessage(message) {

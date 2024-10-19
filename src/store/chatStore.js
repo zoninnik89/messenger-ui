@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, observable } from 'mobx';
 
 class ChatStore {
 
@@ -45,7 +45,7 @@ class ChatStore {
 
   chats = [
     {
-      id: 1,
+      id: '1',
       name: 'Chat with Bob',
       participants: [
         {
@@ -59,12 +59,10 @@ class ChatStore {
           avatar: 'https://img.freepik.com/premium-vector/beauty-girl-avatar-character-simple-vector_855703-380.jpg',
         },
       ],
-      messages: [
-        
-      ],
+      messages: [],
     },
     {
-      id: 2,
+      id: '2',
       name: 'Chat with Jill',
       participants: [
         {
@@ -82,25 +80,32 @@ class ChatStore {
     },
   ];
 
-  selectedChat = null;
+  selectedChatID = null;
 
   constructor() {
     makeAutoObservable(this);
-  }
-
-  sendMessage(message) {
-    if (this.selectedChat) {
-      this.selectedChat.messages.push(message);
-    }
   }
 
   addChat(chat) {
     this.chats.push(chat);
   }
 
-  selectChat(chat) {
-    this.selectedChat = chat;
-    console.log(this.selectedChat)
+  checkChatExists(targetChatID) {
+    for (const chat of this.chats) {
+      if (chat.id == targetChatID) {
+        return true
+      }
+    }
+    return false
+  }
+
+  addMessageToChat(id, message) {
+    this.chats[id].messages.push(message)
+  }
+
+  selectChat(chatID) {
+    this.selectedChatID = chatID;
+    console.log(this.selectedChatID)
   }
 }
 
