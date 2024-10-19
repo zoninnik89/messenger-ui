@@ -2,10 +2,14 @@ import React from 'react';
 import ChatList from './chat_list/ChatList';
 import ChatWindow from './chat_window/ChatWindow';
 import { useStore } from '../../../store/useStore';
+import WebSocketService from '../../websocketservice/WebSocketService';
 import './ChatPage.css'; 
 
 const ChatPage = () => {
-  const { chatStore } = useStore();
+  const { chatStore, userStore } = useStore();
+
+  const webSocketService = new WebSocketService(chatStore, userStore);
+  webSocketService.connect();
 
   return (
     <div className="chat-page">

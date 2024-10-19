@@ -3,11 +3,14 @@ import './App.css';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import ChatPage from './components/pages/ChatPage/ChatPage';
-import LoginModalWrapper from './components/modals/LoginModal/LoginModalWrapper';
+import StartPage from './components/pages/StartPage/StartPage';
 import TopMenu from './components/top_menu/TopMenu';
 import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { useStore } from './store/useStore'
 
 const App = observer(() => {
+  const { userStore } = useStore();
+  const isAuthenticatedUser = userStore.currentUser.id !== '';
 
   return (
     <Router>
@@ -15,8 +18,7 @@ const App = observer(() => {
         <TopMenu /> {/* MenuBar will always stay at the top */}
         <div className="content">
           <Routes>
-            <Route path="/" element={<ChatPage />} />
-            <Route path="/login" element={<LoginModalWrapper />} />
+            <Route path="/" element= {isAuthenticatedUser ? <ChatPage /> : <StartPage />} />
           </Routes>
         </div>
       </div>

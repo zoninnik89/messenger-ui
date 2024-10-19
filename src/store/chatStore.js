@@ -1,14 +1,10 @@
 import { makeAutoObservable } from 'mobx';
 
 class ChatStore {
-  currentUser = {
-    id: 2, // The ID for the current logged-in user
-    name: 'You',
-    avatar: 'https://img.freepik.com/premium-vector/beauty-girl-avatar-character-simple-vector_855703-380.jpg',
-  };
 
-  chats = [
-    {
+  /* Expected chat structure
+
+  {
       id: 1,
       name: 'Chat with Bob',
       participants: [
@@ -42,6 +38,29 @@ class ChatStore {
           },
           time: '12:44 PM',
         },
+      ],
+    },
+
+*/
+
+  chats = [
+    {
+      id: 1,
+      name: 'Chat with Bob',
+      participants: [
+        {
+          id: 1,
+          name: 'Bob',
+          avatar: 'https://mdbcdn.b-cdn.net/img/new/avatars/2.webp',
+        },
+        {
+          id: 2,
+          name: 'You',
+          avatar: 'https://img.freepik.com/premium-vector/beauty-girl-avatar-character-simple-vector_855703-380.jpg',
+        },
+      ],
+      messages: [
+        
       ],
     },
     {
