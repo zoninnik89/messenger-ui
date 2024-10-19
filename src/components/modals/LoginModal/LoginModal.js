@@ -13,18 +13,29 @@ const AuthPopup = ({ open, from }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState(''); // For registration
-  const [errors, setErrors] = useState({ email: '', password: '', confirmPassword: '' });
+  const [uiValidationErrors, setUIValidationErrors] = useState({ email: '', password: '', confirmPassword: '' });
   const [isLogin, setIsLogin] = useState(true); // Toggle between Login and Register
+  const [successMessage, setSuccessMessage] = useState(''); // For success message
+  const [registrationSuccess, setRegistrationSuccess] = useState(false); // To track registration success
+  const [backendErrorMessage, setBackendErrorMessage] = useState(''); // To track backend error messages
+
   const { userStore } = useStore();
   const navigate = useNavigate();
 
   const loginUrl = 'http://127.0.0.1:3002/login'
   const registerUrl = 'http://127.0.0.1:3002/register'
 
+  const clearForm = () => {
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+  }
+
   // Handle closing of the popup and navigate back to home page
   const handleClose = () => {
+    clearForm();
     setOpen(false);
-    navigate(from)
+    navigate(from);
   };
 
   const validateEmail = (email) => {
@@ -59,7 +70,7 @@ const AuthPopup = ({ open, from }) => {
         valid = false;
     }
 
-    setErrors({ email: emailError, password: passwordError, confirmPassword: confirmPasswordError });
+    setUIValidationErrors({ email: emailError, password: passwordError, confirmPassword: confirmPasswordError });
 
     // If form is valid, proceed with login request
     if (valid) {
@@ -73,59 +84,93 @@ const AuthPopup = ({ open, from }) => {
                 body: JSON.stringify({ login: email, password: password }),
             });
 
+            const data = await response.json();
+
             if (response.ok) {
-                const data = await response.json();
                 if (isLogin) {
-                    userStore.saveUserData(data)
+                  userStore.saveUserData(data);
+                  console.log('Login successful:', data);
+                  handleClose();
+                } else {
+                  console.log('Registration successful:', data);
+                  setSuccessMessage('Registration successful! Please log in.'); // Set success message
+                  setRegistrationSuccess(true); // Mark registration as successful
+                  clearForm();
                 }
-                console.log(isLogin ? 'Login successful:' : 'Registration successful:', data);
-                // Store the token in user store
+                setBackendErrorMessage(''); // Clear any existing backend error message
             } else {
-                console.error('Login failed:', response.statusText)
+              const error = data.error || 'An error occurred on backend';
+              setBackendErrorMessage(error);
+              console.error(isLogin ? 'Login failed:' : 'Registration failed:', error);
             }
         } catch (error) {
-            console.error('Error:', error)
+          setBackendErrorMessage('Internal server error, please try again later');
+          console.error('Error:', error)
         }
     }
   }
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
-    setErrors({ email: '', password: '', confirmPassword: '' });
+    setUIValidationErrors({ email: '', password: '', confirmPassword: '' });
+    setSuccessMessage('');
+    setRegistrationSuccess(false); // Reset registration success state
+    setBackendErrorMessage(''); // Clear backend error messagee
+    clearForm();
   };
 
   return (
 
-      <Dialog open={isOpened} onClose={handleClose}>
-        <DialogTitle>{isLogin ? 'Login' : 'Register'}</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="email"
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="standard"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            error={!!errors.email}
-            helperText={errors.email}
-          />
-          <TextField
-            margin="dense"
-            id="password"
-            label="Password"
-            type="password"
-            fullWidth
-            variant="standard"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            error={!!errors.password}
-            helperText={errors.password}
-          />
-          {!isLogin && (
+    <Dialog open={isOpened} onClose={handleClose}>
+      <DialogTitle>{isLogin ? 'Login' : 'Register'}</DialogTitle>
+      <DialogContent>
+        {registrationSuccess ? (
+          // Show success message and link back to login form
+          <>
+            <div style={{ color: 'green', marginBottom: '1em' }}>
+              {successMessage}
+            </div>
+            <div>
+              <Button onClick={toggleForm} color="primary" style={{ textTransform: 'none', marginTop: '1em' }}>
+                Go to Login
+              </Button>
+            </div>
+          </>
+        ) : (
+          // Show form fields when not registered
+          <>
+            {backendErrorMessage && (
+              <div style={{ color: 'red', marginBottom: '1em' }}>
+                {backendErrorMessage}
+              </div>
+            )}
             <TextField
+              autoFocus
+              margin="dense"
+              id="email"
+              label="Email Address"
+              type="email"
+              fullWidth
+              variant="standard"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              error={!!uiValidationErrors.email}
+              helperText={uiValidationErrors.email}
+            />
+            <TextField
+              margin="dense"
+              id="password"
+              label="Password"
+              type="password"
+              fullWidth
+              variant="standard"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              error={!!uiValidationErrors.password}
+              helperText={uiValidationErrors.password}
+            />
+            {!isLogin && (
+              <TextField
                 margin="dense"
                 id="confirmPassword"
                 label="Confirm Password"
@@ -134,23 +179,28 @@ const AuthPopup = ({ open, from }) => {
                 variant="standard"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                error={!!errors.confirmPassword}
-                helperText={errors.confirmPassword}
-            />
-          )}
-
-        </DialogContent>
+                error={!!uiValidationErrors.confirmPassword}
+                helperText={uiValidationErrors.confirmPassword}
+              />
+            )}
+          </>
+        )}
+      </DialogContent>
+      {!registrationSuccess && (
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleFormSubmit}>Login</Button>
+          <Button onClick={handleFormSubmit}>{isLogin ? 'Login' : 'Register'}</Button>
         </DialogActions>
+      )}
+      {!registrationSuccess && (
         <DialogActions>
-            <span>{isLogin ? 'New here? ' : 'Already registered? '}</span>
-            <Button onClick={toggleForm} color="primary" style={{ textTransform: 'none' }}>
-                {isLogin ? 'Register' : 'Log in'}
-            </Button>
+          <span>{isLogin ? 'New here? ' : 'Already registered? '}</span>
+          <Button onClick={toggleForm} color="primary" style={{ textTransform: 'none' }}>
+            {isLogin ? 'Register' : 'Log in'}
+          </Button>
         </DialogActions>
-      </Dialog>
+      )}
+  </Dialog>
 
   );
 };
