@@ -1,6 +1,5 @@
 
 import { makeAutoObservable } from 'mobx';
-import websocketService from '../services';
 
 class UserStore {
   currentUser = null;

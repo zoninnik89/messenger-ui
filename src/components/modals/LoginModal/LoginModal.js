@@ -18,7 +18,7 @@ const LoginModal = ({ open, onClose }) => {
   const [registrationSuccess, setRegistrationSuccess] = useState(false); // To track registration success
   const [backendErrorMessage, setBackendErrorMessage] = useState(''); // To track backend error messages
 
-  const { userStore } = useStore();
+  const { userStore, webSocketStore } = useStore();
 
   const loginUrl = 'http://127.0.0.1:3002/login'
   const registerUrl = 'http://127.0.0.1:3002/register'
@@ -88,6 +88,7 @@ const LoginModal = ({ open, onClose }) => {
                 if (isLogin) {
                   userStore.saveUserData(data["auth_token"]);
                   console.log('Login successful:', data);
+                  webSocketStore.connect();
                   handleClose();
                 } else {
                   console.log('Registration successful:', data);

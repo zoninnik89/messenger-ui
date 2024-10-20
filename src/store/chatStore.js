@@ -43,8 +43,8 @@ class ChatStore {
 
 */
 
-
-  selectedChatID = null;
+  chats = observable.array([]);
+  selectedChat = observable.box(null);
 
   constructor() {
     makeAutoObservable(this);
@@ -52,9 +52,9 @@ class ChatStore {
     // Load data from localStorage if it exists
     const storedChats = localStorage.getItem('chats');
     if (storedChats) {
-      this.chats = JSON.parse(storedChats);
+      this.chats.replace(JSON.parse(storedChats));
     } else {
-      this.chats = [
+      this.chats.replace( [
         {
           id: '1',
           name: 'Chat with Bob',
@@ -89,7 +89,8 @@ class ChatStore {
           ],
           messages: [],
         },
-      ];
+      ]
+    );
     }
   }
 
@@ -114,10 +115,11 @@ class ChatStore {
     localStorage.setItem('chats', JSON.stringify(this.chats));
   }
 
-  selectChat(chatID) {
-    this.selectedChatID = chatID;
-    console.log(this.selectedChatID)
+  selectChat(chat) {
+    this.selectedChat.set(chat);
+    console.log(this.selectedChat.get(), this.selectedChat.get().messages)
   }
+
 }
 
 const chatStore = new ChatStore();

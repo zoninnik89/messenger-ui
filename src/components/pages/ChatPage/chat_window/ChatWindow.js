@@ -4,34 +4,23 @@ import { Box, Avatar, TextField, IconButton, Typography } from '@mui/material';
 import './ChatWindow.css';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../../../store/useStore';
-import WebSocketService from '../../../websocketservice/WebSocketService';
 
 const ChatWindow = observer(() => {
-  const { chatStore, userStore } = useStore(); // Store for current user and chat messages
+  const { chatStore, userStore, webSocketStore } = useStore(); // Store for current user and chat messages
   const [newMessage, setNewMessage] = useState('');
   const currentUserID = userStore.getUserID()
 
   const sendMessage = () => {
     if (newMessage.trim() === '') return;
-    console.log('attempting to send the message: ', newMessage)
+    console.log('attempting to send the message: ', newMessage, 'chatID', chatStore.selectedChatID)
 
-    const websocketService = WebSocketService.instance;
-    if (websocketService) {
-    websocketService.sendMessage(
-      JSON.stringify(
-        {
-          chat_id: String(chatStore.selectedChatID),
-          message_text: newMessage,
-        }
-      )
-    );
+    webSocketStore.sendMessage(newMessage);
     setNewMessage('');
-  } else {
-    console.error('WebSocketService is not available')
-  }
   }
 
-  if (!chatStore.selectedChatID) {
+  const selectedChat = chatStore.selectedChat.get(); // Get the selected chat
+
+  if (!selectedChat) {
     return (
       <Box className="no-chat-selected" textAlign="center" m="auto">
         Select a chat to start messaging
@@ -43,7 +32,7 @@ const ChatWindow = observer(() => {
     <Box className="chat-window-container" display="flex" flexDirection="column" height="100%">
       {/* Messages section */}
       <Box className="messages" flex="1" p={2} overflow="auto">
-        {chatStore.chats[chatStore.selectedChatID].messages.map((msg, index) => (
+        {selectedChat.messages.map((msg, index) => (
           <Box
             key={index}
             display="flex"
@@ -65,7 +54,7 @@ const ChatWindow = observer(() => {
             >
               <Typography variant="body1">{msg.message_text}</Typography>
               <Typography variant="caption" color="textSecondary" textAlign="right">
-                {new Date(msg.sent_ts * 1000).toLocaleString()}
+                {new Date(parseInt(msg.sent_ts, 10) * 1000).toLocaleString()}
               </Typography>
             </Box>
           </Box>

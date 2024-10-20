@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ChatList from './chat_list/ChatList';
 import ChatWindow from './chat_window/ChatWindow';
-import { useStore } from '../../../store/useStore';
-import WebSocketService from '../../websocketservice/WebSocketService';
 import './ChatPage.css'; 
+import { useStore } from '../../../store/useStore';
 
 const ChatPage = () => {
-  const { chatStore, userStore } = useStore();
 
-  const webSocketService = new WebSocketService(chatStore, userStore);
-  webSocketService.connect();
+  const {webSocketStore} = useStore();
+  if (!webSocketStore.isConnected) {
+    webSocketStore.connect();
+  }
 
   return (
     <div className="chat-page">

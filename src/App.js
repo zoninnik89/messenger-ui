@@ -7,10 +7,8 @@ import StartPage from './components/pages/StartPage/StartPage';
 import TopMenu from './components/top_menu/TopMenu';
 import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useStore } from './store/useStore'
-import { InitializeWebSocketService } from './services'
 
 const App = observer(() => {
-  InitializeWebSocketService();
 
   const { userStore } = useStore();
   const isAuthenticatedUser = userStore.currentUser.id !== '';

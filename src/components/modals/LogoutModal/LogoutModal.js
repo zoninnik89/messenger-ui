@@ -9,10 +9,11 @@ import { useStore } from '../../../store/useStore';
 
 const LogoutModal = ({ open, onClose }) => {
 
-  const { userStore } = useStore();
+  const { userStore, webSocketStore } = useStore();
 
   const handleLogout = () => {
     userStore.removeUserData();
+    webSocketStore.disconnect();
     onClose();
   };
 
