@@ -3,16 +3,23 @@ import { makeAutoObservable } from 'mobx';
 import websocketService from '../services';
 
 class UserStore {
-  currentUser = {
-    'token': '',
-    'id': '',
-    'login': '',
-  };
-
-  websocketService = null;
+  currentUser = null;
 
   constructor() {
     makeAutoObservable(this);
+
+    const currentUnixTime = Math.floor(Date.now() / 1000);
+    const storedUserData = localStorage.getItem('userData');
+    if (storedUserData) {
+      const parsedUserData = JSON.parse(storedUserData);
+      if (parsedUserData['exp'] > currentUnixTime) {
+        this.currentUser = parsedUserData;
+      } else{
+        this.resetUserData();
+        };
+    } else {
+      this.resetUserData();
+    } 
   }
 
   saveUserData(token) {
@@ -20,6 +27,13 @@ class UserStore {
     this.currentUser['token'] = token;
     this.currentUser['id'] = tokenPayload['uid'];
     this.currentUser['login'] = tokenPayload['login'];
+    this.currentUser['exp'] = tokenPayload['exp']
+
+    localStorage.setItem('userData', JSON.stringify(this.currentUser));
+  }
+
+  saveUserDataToStorage() {
+    localStorage.setItem('userData', JSON.stringify(this.currentUser));
   }
 
   getUserID() {
@@ -27,16 +41,22 @@ class UserStore {
   }
 
   removeUserData() {
-    this.currentUser['token'] = '';
-    this.currentUser['id'] = '';
-    this.currentUser['login'] = '';
-    this.websocketService = null;
+    this.resetUserData();
+    localStorage.removeItem('userData');
+  }
+
+  resetUserData() {
+    this.currentUser = {
+      token: '',
+      id: '',
+      login: '',
+      exp: '',
+    };
   }
 
   setWebSocketService(service) {
     this.websocketService = service;
   }
-
 
 }
 
