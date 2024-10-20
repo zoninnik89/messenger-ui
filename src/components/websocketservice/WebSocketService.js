@@ -11,6 +11,10 @@ class WebSocketService {
         this.userStore = userStore;
         this.ws = null;
         this.isConnected = false;
+        this.reconnectAttempts = 0; // Track the number of reconnection attempts
+        this.maxReconnectAttempts = 5; // Set a limit for retries
+        this.reconnectDelay = 1000; // Initial delay in milliseconds
+        this.reconnectTimeout = null; // To store the reconnect timeout ID
         WebSocketService.instance = this;
     }
   
@@ -30,14 +34,15 @@ class WebSocketService {
 
         this.ws.onopen = () => {
             this.isConnected = true;
+            this.reconnectAttempts = 0; // Reset reconnect attempts on successful connection
             console.log(`WebSocket connection established, status is ${this.isConnected}`);
         };
     
         this.ws.onmessage = (event) => {
             console.log('Message from server:', event.data);
             const message = JSON.parse(event.data);
-            if (message.type) {
-              console.log('ping from backend received')
+            if (message.type === 'ping') {
+              console.log('Ping from backend received')
             } else {
               this.handleIncomingMessage(message);
             }
@@ -46,25 +51,22 @@ class WebSocketService {
         this.ws.onclose = () => {
             this.isConnected = false;
             console.log('WebSocket connection closed');
+            this.scheduleReconnect();
         };
     
         this.ws.onerror = (error) => {
             console.error('WebSocket error:', error);
+            this.scheduleReconnect(); // Handle errors by scheduling a reconnect
         };
     }
   
-    handleIncomingMessage(message) {
-        console.log('Keys in the message object:', Object.keys(message))
-        console.log(`Type of message.chat_id: ${typeof message.chat_id}`); // Check the type
-        console.log(`Value of message.chat_id: ${message.chat_id}`); // Check the actual value
-        
-        for (const chat of this.chatStore.chats) {
-          if (chat.id == message.chat_id) {
-            console.log('message was added to chat messages')
-            console.log(this.chatStore.chats[message.chat_id].messages)
-            return this.chatStore.addMessageToChat(message.chat_id, message)
-          }
+    handleIncomingMessage(message) {      
+        if (this.chatStore.chats.some((chat) => chat.id === message.chat_id)) {
+          console.log('message was added to chat messages');
+          this.chatStore.addMessageToChat(message.chat_id, message);
+          return
         }
+        console.log(`Chat ID ${message.chat_id} was not found`);
     }
   
     sendMessage(message) {
@@ -81,6 +83,27 @@ class WebSocketService {
         this.ws = null;
         this.isConnected = false;
       }
+
+      if (this.reconnectTimeout) {
+        clearTimeout(this.reconnectTimeout); // Clear any scheduled reconnect attempts
+        this.reconnectTimeout = null;
+      }
+    }
+
+    scheduleReconnect() {
+      if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+          console.warn('Maximum reconnect attempts reached. Giving up.');
+          return;
+      }
+
+      const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts); // Exponential backoff
+      this.reconnectAttempts += 1;
+      console.log(`Attempting to reconnect in ${delay / 1000} seconds...`);
+
+      this.reconnectTimeout = setTimeout(() => {
+          console.log(`Reconnecting... (attempt ${this.reconnectAttempts})`);
+          this.connect();
+      }, delay);
     }
   }
   
