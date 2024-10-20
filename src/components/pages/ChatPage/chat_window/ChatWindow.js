@@ -65,7 +65,7 @@ const ChatWindow = observer(() => {
             >
               <Typography variant="body1">{msg.message_text}</Typography>
               <Typography variant="caption" color="textSecondary" textAlign="right">
-                {msg.sent_ts}
+                {new Date(msg.sent_ts * 1000).toLocaleString()}
               </Typography>
             </Box>
           </Box>
